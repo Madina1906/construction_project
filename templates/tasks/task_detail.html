@@ -1,0 +1,59 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">{{ task.title }}</h3>
+    </div>
+    <div class="card-body">
+      <p>
+        <strong>Tavsif:</strong> {{ task.description or "Tavsif berilmagan" }}
+      </p>
+
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <strong>Loyiha:</strong>
+          <span class="badge bg-info text-dark">{{ task.project.name }}</span>
+        </div>
+        <div class="col-md-6">
+          <strong>Status:</strong>
+          {% if task.status == "assigned" %}
+          <span class="badge bg-warning text-dark">Yangi</span>
+          {% elif "done" in task.status %}
+          <span class="badge bg-success">Bajarildi</span>
+          {% else %}
+          <span class="badge bg-secondary">{{ task.status }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <strong>Vazifani bajaruvchi:</strong>
+          {% for assign in task.assignments %}
+          <span class="badge bg-primary">{{ assign.user.full_name }}</span>
+          {% endfor %}
+        </div>
+        <div class="col-md-6">
+          <strong>Muddat:</strong>
+          {% for assign in task.assignments %}
+          <span class="badge bg-secondary"
+            >{{ assign.due_date.strftime('%Y-%m-%d') }}</span
+          >
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="mt-3">
+        {% if task.status != "worker_done" %}
+        <form method="post" action="/tasks/{{ task.id }}/done">
+          <button type="submit" class="btn btn-success">
+            Vazifani bajarildi deb belgilash
+          </button>
+        </form>
+        {% endif %}
+        <a href="/dashboard" class="btn btn-outline-primary mt-2">Orqaga</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

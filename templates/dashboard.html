@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="mb-4 text-center text-primary">
+  Xush kelibsiz, {{ user.full_name }}!
+</h1>
+
+<div class="row g-4">
+
+  <!-- Joriy loyihalar -->
+
+  <div class="col-lg-8">
+    <div class="card shadow-sm border-0">
+
+```
+  <div class="card-header bg-info text-white">
+    <h5 class="mb-0">Joriy loyihalar</h5>
+  </div>
+
+  <div class="card-body">
+    {% if projects %}
+
+      <ul class="list-group list-group-flush">
+        {% for project in projects %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+
+            <span>{{ project.name }}</span>
+
+            <span class="badge bg-primary rounded-pill">
+              {{ project.progress }}%
+            </span>
+
+          </li>
+        {% endfor %}
+      </ul>
+
+    {% else %}
+      <p class="text-muted text-center py-3">
+        Hozircha faol loyiha yo'q
+      </p>
+    {% endif %}
+  </div>
+
+</div>
+```
+
+  </div>
+
+  <!-- Tez harakatlar -->
+
+  <div class="col-lg-4">
+    <div class="card shadow-sm border-0">
+
+```
+  <div class="card-header bg-light">
+    <h5 class="mb-0">Tez harakatlar</h5>
+  </div>
+
+  <div class="card-body d-grid gap-2">
+
+    <a href="/tasks/new" class="btn btn-outline-primary">
+      Yangi vazifa qo'shish
+    </a>
+
+    <a href="/report" class="btn btn-outline-success">
+      Hisobot yuklab olish
+    </a>
+
+  </div>
+
+</div>
+```
+
+  </div>
+
+</div>
+
+<!-- Ishchi uchun shaxsiy vazifalar -->
+
+{% if is_ishchi %}
+
+<div class="card shadow-sm border-0 mt-4">
+
+  <div class="card-header bg-warning text-dark">
+    <h5 class="mb-0">Mening vazifalarim</h5>
+  </div>
+
+  <div class="card-body">
+
+```
+{% if user_tasks %}
+
+<div class="table-responsive">
+
+  <table class="table table-hover align-middle">
+
+    <thead class="table-light">
+
+      <tr>
+        <th>Vazifa</th>
+        <th>Holati</th>
+        <th>Muddat</th>
+        <th>Harakat</th>
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for task in user_tasks %}
+
+      <tr>
+
+        <!-- Vazifa nomi -->
+        <td>
+          {{ task.title }}
+        </td>
+
+
+        <!-- Status -->
+        <td>
+
+          <span class="badge
+            {% if task.status.value == 'done' %}
+              bg-success
+            {% elif task.status.value == 'in_progress' %}
+              bg-info
+            {% elif task.status.value == 'waiting_approval' %}
+              bg-warning
+            {% elif task.status.value == 'rejected' %}
+              bg-danger
+            {% else %}
+              bg-secondary
+            {% endif %}
+          ">
+
+            {{ task.status.value }}
+
+          </span>
+
+        </td>
+
+
+        <!-- Muddat -->
+        <td>
+
+          {% if task.due_date %}
+            {{ task.due_date.strftime('%Y-%m-%d') }}
+          {% else %}
+            Belgilanmagan
+          {% endif %}
+
+        </td>
+
+
+        <!-- Actions -->
+        <td>
+
+          <div class="d-flex gap-2">
+
+            <a href="/tasks/{{task.id}}" class="btn btn-sm btn-outline-primary">
+              Batafsil
+            </a>
+
+            {% if task.status.value != 'done' %}
+
+            <form action="/tasks/{{task.id}}/done" method="post">
+
+              <button class="btn btn-sm btn-success">
+                DONE
+              </button>
+
+            </form>
+
+            {% endif %}
+
+          </div>
+
+        </td>
+
+      </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+  </table>
+
+</div>
+
+{% else %}
+
+<div class="text-center py-4">
+
+  <p class="text-muted mb-2">
+    Hozircha sizga biriktirilgan vazifa yo'q.
+  </p>
+
+  <small class="text-muted">
+    Prorab yoki rahbar sizga vazifa biriktirganda bu yerda paydo bo'ladi.
+  </small>
+
+</div>
+
+{% endif %}
+```
+
+  </div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

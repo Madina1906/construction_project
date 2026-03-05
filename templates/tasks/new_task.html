@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+  <div class="col-lg-6">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h4>Yangi vazifa qo‘shish</h4>
+      </div>
+      <div class="card-body">
+        <form method="post" action="/tasks/new">
+          <div class="mb-3">
+            <label for="title" class="form-label">Vazifa nomi *</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Tavsif</label>
+            <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="project_id" class="form-label">Loyiha *</label>
+            <select class="form-select" id="project_id" name="project_id" required>
+              <option value="">Tanlang</option>
+              {% for project in projects %}
+                <option value="{{ project.id }}">{{ project.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="assigned_to_id" class="form-label">Vazifani kim bajaradi *</label>
+            <select class="form-select" id="assigned_to_id" name="assigned_to_id" required>
+              <option value="">Tanlang</option>
+              {% for worker in workers %}
+                <option value="{{ worker.id }}">{{ worker.full_name }} ({{ worker.username }})</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label for="due_date" class="form-label">Muddat</label>
+            <input type="date" class="form-control" id="due_date" name="due_date">
+          </div>
+
+          <button type="submit" class="btn btn-success w-100">Vazifani qo‘shish</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
